@@ -7,15 +7,23 @@ const { width } = Dimensions.get('window');
 export default class ViewSlider extends Component {
   constructor() {
     super();
-    this.slidesCount = 0;
     this.state = {
+      slidesCount: 0,
       step: 1,
       autoSlide: false,
     };
   }
 
   static getDerivedStateFromProps(props, state) {
+    let slidesCount = state.slidesCount;
+    if (
+      props.hasOwnProperty('renderSlides') &&
+      props.renderSlides.hasOwnProperty('props') &&
+      props.renderSlides.props.hasOwnProperty('children')
+    )
+      slidesCount = Object.keys(props.renderSlides.props.children).length;
     return {
+      slidesCount,
       step: props.hasOwnProperty('step') ? props.step : state.step,
       autoSlide: props.hasOwnProperty('autoSlide')
         ? props.autoSlide
@@ -30,15 +38,6 @@ export default class ViewSlider extends Component {
   }
 
   componentDidMount() {
-    if (
-      this.props.hasOwnProperty('renderSlides') &&
-      this.props.renderSlides.hasOwnProperty('props') &&
-      this.props.renderSlides.props.hasOwnProperty('children')
-    )
-      this.slidesCount = Object.keys(
-        this.props.renderSlides.props.children
-      ).length;
-
     if (this.props.autoSlide === true && this.scroll.scrollTo) {
       this.startAutoSlide();
     }
@@ -95,7 +94,7 @@ export default class ViewSlider extends Component {
       dotInactiveColor,
       dotsContainerStyle,
     } = this.props;
-    const { step } = this.state;
+    const { step, slidesCount } = this.state;
 
     return (
       <View style={[{ width, height: this.props.height }, this.props.style]}>
@@ -114,7 +113,7 @@ export default class ViewSlider extends Component {
           <Dots
             activeColor={dotActiveColor}
             inactiveColor={dotInactiveColor}
-            count={this.slidesCount}
+            count={slidesCount}
             activeDot={step}
             containerStyle={dotsContainerStyle}
           />
