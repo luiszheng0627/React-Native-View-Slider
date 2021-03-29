@@ -18,8 +18,8 @@ export default class ViewSlider extends Component {
 
   static getDerivedStateFromProps(props, state) {
     return {
-      step: props.hasOwnProperty('step') ? props.step : 1,
-      autoSlide: props.hasOwnProperty('autoSlide') ? props.autoSlide : false,
+      step: props.hasOwnProperty('step') ? props.step : state.step,
+      autoSlide: props.hasOwnProperty('autoSlide') ? props.autoSlide : state.autoSlide,
     };
   }
 
@@ -74,9 +74,7 @@ export default class ViewSlider extends Component {
   };
 
   setStep = (step = 1) => {
-    const scrollToX =
-      this.slidesCount * width - (this.slidesCount - (step - 1)) * width;
-
+    const scrollToX = this.slidesCount * width - (this.slidesCount - (step - 1)) * width;
     setTimeout(() => this.scroll.scrollTo({ x: scrollToX }), 50);
   };
 
@@ -86,8 +84,7 @@ export default class ViewSlider extends Component {
 
   onMomentumScrollEnd = ({ nativeEvent }) => {
     const index = Math.round(nativeEvent.contentOffset.x / width) + 1;
-    this.setState({ step: index });
-    this.onScrollCb(index);
+    this.setState({ step: index }), this.onScrollCb(index));
   };
 
   render() {
