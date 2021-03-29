@@ -7,14 +7,12 @@ const { width } = Dimensions.get('window');
 export default class ViewSlider extends Component {
   constructor() {
     super();
-
     this.slidesCount = 0;
+    this.state = {
+      step: 1,
+      autoSlide: false,
+    };
   }
-
-  state = {
-    step: 1,
-    autoSlide: false,
-  };
 
   static getDerivedStateFromProps(props, state) {
     return {
