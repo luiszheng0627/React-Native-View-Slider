@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, Dimensions } from 'react-native';
+import { Dimensions, ScrollView, View } from 'react-native';
 import Dots from './dots';
 
 const { width } = Dimensions.get('window');
@@ -24,13 +24,20 @@ export default class ViewSlider extends Component {
   }
 
   componentDidUpdate(props) {
-    if (props.step !== this.state.step) this.setStep(this.state.step);
+    if (props.hasOwnProperty('step')) {
+      if (props.step !== this.state.step) this.setStep(this.state.step);
+    }
   }
 
   componentDidMount() {
-    if (this.props.hasOwnProperty('renderSlides') 
-      && this.props.renderSlides.hasOwnProperty('props') 
-      && this.props.renderSlides.props.hasOwnProperty('children')) this.slidesCount = Object.keys(this.props.renderSlides.props.children).length;
+    if (
+      this.props.hasOwnProperty('renderSlides') &&
+      this.props.renderSlides.hasOwnProperty('props') &&
+      this.props.renderSlides.props.hasOwnProperty('children')
+    )
+      this.slidesCount = Object.keys(
+        this.props.renderSlides.props.children
+      ).length;
 
     if (this.props.autoSlide === true && this.scroll.scrollTo) {
       this.startAutoSlide();
@@ -67,21 +74,22 @@ export default class ViewSlider extends Component {
   };
 
   setStep = (step = 1) => {
-    const scrollToX = (this.slidesCount * width) - ((this.slidesCount - (step - 1)) * width);
-    
+    const scrollToX =
+      this.slidesCount * width - (this.slidesCount - (step - 1)) * width;
+
     setTimeout(() => this.scroll.scrollTo({ x: scrollToX }), 50);
-  }
+  };
 
   onScrollCb = (index) => {
     if (this.props.hasOwnProperty('onScroll')) this.props.onScroll(index);
-  }
+  };
 
   onMomentumScrollEnd = ({ nativeEvent }) => {
     const index = Math.round(nativeEvent.contentOffset.x / width) + 1;
- 
+
     this.setState({ step: index }, this.onScrollCb(index));
-  }
- 
+  };
+
   render() {
     const {
       dots,
