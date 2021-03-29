@@ -86,8 +86,8 @@ export default class ViewSlider extends Component {
 
   onMomentumScrollEnd = ({ nativeEvent }) => {
     const index = Math.round(nativeEvent.contentOffset.x / width) + 1;
-
-    this.setState({ step: index }, this.onScrollCb(index));
+    this.setState({ step: index });
+    this.onScrollCb(index);
   };
 
   render() {
