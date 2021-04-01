@@ -33,7 +33,7 @@ export default class ViewSlider extends Component {
 
   componentDidUpdate(props) {
     if (props.hasOwnProperty('step')) {
-      if (props.step !== this.state.step) this.setStep(this.state.step);
+      if (props.step !== this.props.step) this.setStep(this.props.step);
     }
   }
 
@@ -47,7 +47,7 @@ export default class ViewSlider extends Component {
     }
 
     if (this.props.hasOwnProperty('slidesCount')) {
-      this.props.slidesCount(this.slidesCount);
+      this.props.slidesCount(this.state.slidesCount);
     }
   }
 
@@ -57,7 +57,7 @@ export default class ViewSlider extends Component {
     if (interval < 1000) {
       console.warn('slideInterval time must be at least 1000 milisecond.');
     } else {
-      const count = this.slidesCount;
+      const count = this.state.slidesCount;
       let step = 1;
 
       setInterval(() => {
@@ -74,7 +74,8 @@ export default class ViewSlider extends Component {
 
   setStep = (step = 1) => {
     const scrollToX =
-      this.slidesCount * width - (this.slidesCount - (step - 1)) * width;
+      this.state.slidesCount * width -
+      (this.state.slidesCount - (step - 1)) * width;
     setTimeout(() => this.scroll.scrollTo({ x: scrollToX }), 50);
   };
 
