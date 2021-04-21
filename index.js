@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { Dimensions, ScrollView, View } from 'react-native';
 import Dots from './dots';
 
@@ -7,6 +7,7 @@ const { width } = Dimensions.get('window');
 export default class ViewSlider extends Component {
   constructor() {
     super();
+    this.scrollRef = createRef();
     this.state = {
       slidesCount: 0,
       step: 1,
@@ -38,7 +39,7 @@ export default class ViewSlider extends Component {
   }
 
   componentDidMount() {
-    if (this.props.autoSlide === true && this.scroll.scrollTo) {
+    if (this.props.autoSlide === true && this.scrollRef.current?.scrollTo) {
       this.startAutoSlide();
     }
 
@@ -76,7 +77,7 @@ export default class ViewSlider extends Component {
     const scrollToX =
       this.state.slidesCount * width -
       (this.state.slidesCount - (step - 1)) * width;
-    setTimeout(() => this.scroll.scrollTo({ x: scrollToX }), 50);
+    setTimeout(() => this.scrollRef.current?.scrollTo({ x: scrollToX }), 50);
   };
 
   onScrollCb = (index) => {
@@ -100,10 +101,10 @@ export default class ViewSlider extends Component {
     return (
       <View style={[{ width, height: this.props.height }, this.props.style]}>
         <ScrollView
+          ref={this.scrollRef}
           contentContainerStyle={{}}
           horizontal={true}
           pagingEnabled={true}
-          ref={(node) => (this.scroll = node)}
           scrollEventThrottle={70}
           onMomentumScrollEnd={this.onMomentumScrollEnd}
           showsHorizontalScrollIndicator={false}
